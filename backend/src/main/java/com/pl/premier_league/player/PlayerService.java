@@ -41,6 +41,10 @@ public class PlayerService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<Player> getPlayerByName(String playerName) {
+        return playerRepository.findByName(playerName);
+    }
+
     public List<Player> getPlayersByName(String searchText) {
 
         return playerRepository.findAll().stream()

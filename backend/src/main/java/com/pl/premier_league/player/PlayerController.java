@@ -38,6 +38,15 @@ public class PlayerController {
         }
     }
 
+    @GetMapping("/{playerName}")
+    public ResponseEntity<Player> getPlayerByName(@PathVariable String playerName) {
+
+        return playerService.getPlayerByName(playerName)
+                .map(player -> new ResponseEntity<>(player, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+
+    } /* ResponseEntity<>: Player is converted to ResponseEntity, where you can can control status code, access response body(player data), and headers */
+
     @PostMapping /* Handles HTTP Post requests to add player to db */
 
     /*@RequestBody: client sends /api/v1/player with JSON body that includes player data, Spring sees @RequestBody and creates a Player object with data*/
