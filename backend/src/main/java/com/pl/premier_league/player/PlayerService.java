@@ -90,6 +90,17 @@ public class PlayerService {
             playerToUpdate.setTeamName(updatedPlayer.getTeamName());
             playerToUpdate.setPosition(updatedPlayer.getPosition());
             playerToUpdate.setNation(updatedPlayer.getNation());
+            playerToUpdate.setAge(updatedPlayer.getAge());
+            playerToUpdate.setMatches(updatedPlayer.getMatches());
+            playerToUpdate.setStarts(updatedPlayer.getStarts());
+            playerToUpdate.setMinutes(updatedPlayer.getMinutes());
+            playerToUpdate.setGoals(updatedPlayer.getGoals());
+            playerToUpdate.setAssists(updatedPlayer.getAssists());
+            playerToUpdate.setPenalties(updatedPlayer.getPenalties());
+            playerToUpdate.setYellow(updatedPlayer.getYellow());
+            playerToUpdate.setRed(updatedPlayer.getRed());
+            playerToUpdate.setExpectedGoals(updatedPlayer.getExpectedGoals());
+            playerToUpdate.setExpectedAssists(updatedPlayer.getExpectedAssists());
 
             playerRepository.save(playerToUpdate);
             return playerToUpdate;
