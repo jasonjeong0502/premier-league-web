@@ -7,6 +7,16 @@ function App() {
     const [players, setPlayers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const normalizedSearchText = searchText.trim().toLowerCase();
+    const filteredPlayersByName = players.filter((player) => {
+        if(normalizedSearchText === "") {
+            return true;
+        }
+        if(normalizedSearchText === "squad total" ) {
+            return false;
+        }
+        return player.name.toLowerCase().startsWith(normalizedSearchText)});
 
     useEffect(() => {
         async function loadPlayers(){
@@ -26,11 +36,13 @@ function App() {
         loadPlayers();
     }, [])
 
+
+
   return(
       <main className="app">
         <section className="panel">
             <h1>Premier League Players</h1>
-            <p>Showing players loaded from Spring Boot backend</p>
+            <p> Introducing all you need to know about your favorite Premier League Players </p>
         </section>
 
         <section className="panel">
@@ -38,7 +50,11 @@ function App() {
         
         {error && <p className = "error"> {error} </p>}
 
-        {!loading && !error && (
+            <label> Search for players here </label>
+            <input type="search" name="q" placeholder="search for players" value={searchText} onChange={(event) => setSearchText(event.target.value)}/>
+
+            {!loading && !error && (
+
             <div className = "table-wrap">
                 <table>
                     <thead>
@@ -62,8 +78,8 @@ function App() {
                     </thead>
 
                     <tbody>
-                        {players.map((player) => (
-                            <tr key={player.name}>
+                        {filteredPlayersByName.map((player,index) => (
+                            <tr key={`${player.name}-${player.teamName}-${index}`}>
                                 <td>{player.name}</td>
                                 <td>{player.nation}</td>
                                 <td>{player.position}</td>
