@@ -45,7 +45,7 @@ public class PlayerController {
                 .map(player -> new ResponseEntity<>(player, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
-    } /* ResponseEntity<>: Player is converted to ResponseEntity, where you can can control status code, access response body(player data), and headers */
+    } /* ResponseEntity<>: Player is converted to ResponseEntity, where you can control status code, access response body(player data), and headers */
 
     @PostMapping /* Handles HTTP Post requests to add player to db */
 

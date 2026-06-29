@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import PlayerTable from "./PlayerTable.jsx";
 const API_BASE = '/api/v1/player'
 
 function App() {
@@ -8,15 +9,26 @@ function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [searchText, setSearchText] = useState("");
-    const normalizedSearchText = searchText.trim().toLowerCase();
-    const filteredPlayersByName = players.filter((player) => {
-        if(normalizedSearchText === "") {
-            return true;
-        }
-        if(normalizedSearchText === "squad total" ) {
-            return false;
-        }
-        return player.name.toLowerCase().startsWith(normalizedSearchText)});
+    const [selectedTeam, setSelectedTeam] = useState("All Teams");
+    const [sortBy, setSortBy] = useState("None")
+    // maybe later add increasing order using setDirection
+    // const [direction, setDirection] = useState();
+    const normalizedSearchText = searchText.trim().toLowerCase()
+    const teamName = [...new Set(players.map((player) => (player.teamName)))].sort()
+    const filteredPlayers = players.filter((player) => {
+
+        const playerName = player.name.toLowerCase();
+        const teamName = player.teamName;
+
+        if (normalizedSearchText === "squad total") return false
+        if(normalizedSearchText === "all teams" || selectedTeam === "All Teams") return true
+
+        const matchesName = normalizedSearchText === "" || playerName.startsWith(normalizedSearchText)
+        const matchesTeam = teamName === "" || teamName.startsWith(selectedTeam)
+
+        return matchesName && matchesTeam
+
+    })
 
     useEffect(() => {
         async function loadPlayers(){
@@ -53,53 +65,22 @@ function App() {
             <label> Search for players here </label>
             <input type="search" name="q" placeholder="search for players" value={searchText} onChange={(event) => setSearchText(event.target.value)}/>
 
+            <select value={selectedTeam} onChange={(event) => setSelectedTeam(event.target.value)}>
+                <option value="All Teams">All Teams</option>
+                {teamName.map((teamName) => (<option key={teamName} value={teamName}>{teamName}</option>))}
+            </select> {/* map() returns an array */}
+            {/* Functional updates: putting functions in setters to retain variable value */}
+            <button type="button" onClick={() => setSortBy(prev => (prev === "Goals" ? "None" : "Goals"))}>Press for Goal Sorting</button>
+            <button type="button" onClick={() => setSortBy(prev => (prev === "Assists" ? "None" : "Assists"))}>Press for Assists Sorting</button>
+
             {!loading && !error && (
-
-            <div className = "table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Nation</th>
-                            <th>Position</th>
-                            <th>Age</th>
-                            <th>Matches</th>
-                            <th>Starts</th>
-                            <th>Minutes</th>
-                            <th>Goals</th>
-                            <th>Assists</th>
-                            <th>Penalties</th>
-                            <th>Yellow</th>
-                            <th>Red</th>
-                            <th>Expected Goals</th>
-                            <th>Expected Assists</th>
-                            <th>Team Name</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {filteredPlayersByName.map((player,index) => (
-                            <tr key={`${player.name}-${player.teamName}-${index}`}>
-                                <td>{player.name}</td>
-                                <td>{player.nation}</td>
-                                <td>{player.position}</td>
-                                <td>{player.age}</td>
-                                <td>{player.matches}</td>
-                                <td>{player.starts}</td>
-                                <td>{player.minutes}</td>
-                                <td>{player.goals}</td>
-                                <td>{player.assists}</td>
-                                <td>{player.penalties}</td>
-                                <td>{player.yellow}</td>
-                                <td>{player.red}</td>
-                                <td>{player.expectedGoals}</td>
-                                <td>{player.expectedAssists}</td>
-                                <td>{player.teamName}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                <PlayerTable /* ... means create a new array copy / sort() can mutate original arrays[arrays that come from state/derived state - ex. filteredplayers.sort()] => can cause bugs*/
+                    players={
+                    sortBy === "Goals" ? [...filteredPlayers].sort((a,b) => (b.goals - a.goals))
+                    : sortBy === "Assists" ? [...filteredPlayers].sort((a,b) => (b.assists - a.assists))
+                    : filteredPlayers
+                }
+                />
         )}
         </section>
       </main>
