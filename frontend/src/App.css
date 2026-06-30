@@ -50,6 +50,7 @@ input {
   flex-wrap: wrap;
 }
 
+/* When the mouse is over a button, show the clickable hand cursor -> cursor:pointer */
 button {
   border: 1px solid #003f8c;
   background: #0d63c9;
@@ -59,6 +60,14 @@ button {
   cursor: pointer;
 }
 
+button:hover {
+  background: #084c9e;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
 button.secondary {
   background: #ffffff;
   color: #0d63c9;
@@ -99,4 +108,12 @@ td {
 .error {
   color: #b02818;
   font-weight: 600;
+}
+/* When the mouse is over a player row, show the clickable hand cursor */
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background: #f4f8fc;
 }

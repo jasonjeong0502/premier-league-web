@@ -1,4 +1,5 @@
-function PlayerTable({players}) {
+// Children can't directly change parent state, but by passing functions(ex.onSelectPlayer={setSelectPlayer}) to children, you can indirectly do so
+function PlayerTable({players, onSelectPlayer}) {
     return (
     <div className = "table-wrap">
         <table>
@@ -24,7 +25,7 @@ function PlayerTable({players}) {
 
             <tbody>
             {players.map((player,index) => (
-                <tr key={`${player.name}-${player.teamName}-${index}`}>
+                <tr key={`${player.name}-${player.teamName}-${index}`} onClick={() => onSelectPlayer(player)}>
                     <td>{player.name}</td>
                     <td>{player.nation}</td>
                     <td>{player.position}</td>

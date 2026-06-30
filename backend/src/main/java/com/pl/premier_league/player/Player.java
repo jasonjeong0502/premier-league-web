@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 /* JPA = Java Persistence API: standard specification in Java for managing relational data, allowing developers to map Java objects to database tables (ORM) using annotations or XML
  -> included in Jakarta Persistence */
@@ -13,7 +15,7 @@ import jakarta.persistence.Table;
 public class Player {
     @Id /* marks a field as primary key - every JPA entity must have one identifier filed  */
     /* annotation specifies that primary key of player entity is Name */
-    @Column(name = "player_name", unique = true) /* Maps Java field to a specific column in database */
+    @Column(name = "player_name") /* Maps Java field to a specific column in database */
     /* name = "player_name" means the name field in this class will be mapped to db column called player_name */
     private String name;                         /* unique = true means there must be no duplicates within that column - no 2 player has same name */
     private String nation;
@@ -30,6 +32,8 @@ public class Player {
     private Double expected_goals;
     private Double expected_assists;
     private String team_name;
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // private Long id;
 
     public Player() {
     }
@@ -50,6 +54,7 @@ public class Player {
         this.expected_goals = expected_goals;
         this.expected_assists = expected_assists;
         this.team_name = team_name;
+        // this.id = id;
     }
 
     public Player(String name) {
@@ -175,4 +180,12 @@ public class Player {
     public void setTeamName(String team_name) {
         this.team_name = team_name;
     }
+
+    /* public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    } */
 }

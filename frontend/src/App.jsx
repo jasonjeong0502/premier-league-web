@@ -15,6 +15,7 @@ function App() {
     // const [direction, setDirection] = useState();
     const normalizedSearchText = searchText.trim().toLowerCase()
     const teamName = [...new Set(players.map((player) => (player.teamName)))].sort()
+    const [selectedPlayer, setSelectedPlayer] = useState(null);
     const filteredPlayers = players.filter((player) => {
 
         const playerName = player.name.toLowerCase();
@@ -49,12 +50,44 @@ function App() {
     }, [])
 
 
-
+    // Before return(normal JS), you can use if statements
+    // After return(Inside JSX), you can't: use expressions that produce value, not statements that don't
   return(
       <main className="app">
         <section className="panel">
             <h1>Premier League Players</h1>
             <p> Introducing all you need to know about your favorite Premier League Players </p>
+        </section>
+
+        <section className="panel">
+            <h1>Selected Player: {selectedPlayer ? selectedPlayer.name : "Null" }</h1>
+            {/* Ternary condition does NOT have to be a strict boolean. JS checks whether the value is TRUTHY or FALSY*/}
+            {/* FALSY: false, 0, "", null, undefined, NaN(Not a Number - non-configurable, non-writable property). Everything else if usually truthy */}
+
+            {selectedPlayer &&(
+
+            <>
+
+            <p>{`${selectedPlayer.name} * ${selectedPlayer.position} * ${selectedPlayer.nation} * ${selectedPlayer.age}`}</p>
+            <p></p>
+            <p>Goals: {selectedPlayer.goals}</p>
+            <p>Assists: {selectedPlayer.assists}</p>
+            <p>Expected Goals:{selectedPlayer.expectedGoals}</p>
+            <p>Expected Assists:{selectedPlayer.expectedAssists}</p>
+                <br/>
+            <p>Matches:{selectedPlayer.matches}</p>
+            <p>Starts:{selectedPlayer.starts}</p>
+            <p>Minutes:{selectedPlayer.minutes}</p>
+                <br/>
+            <p>Yellow Cards:{selectedPlayer.yellow}</p>
+            <p>Red Cards:{selectedPlayer.red}</p>
+                <br/>
+
+            <button onClick={() => setSelectedPlayer(null)}>Reset Player</button>
+
+            </>
+          )}
+
         </section>
 
         <section className="panel">
@@ -74,14 +107,18 @@ function App() {
             <button type="button" onClick={() => setSortBy(prev => (prev === "Assists" ? "None" : "Assists"))}>Press for Assists Sorting</button>
 
             {!loading && !error && (
-                <PlayerTable /* ... means create a new array copy / sort() can mutate original arrays[arrays that come from state/derived state - ex. filteredplayers.sort()] => can cause bugs*/
-                    players={
-                    sortBy === "Goals" ? [...filteredPlayers].sort((a,b) => (b.goals - a.goals))
-                    : sortBy === "Assists" ? [...filteredPlayers].sort((a,b) => (b.assists - a.assists))
-                    : filteredPlayers
-                }
-                />
-        )}
+                <>
+                    {/* ... means create a new array copy / sort() can mutate original arrays[arrays that come from state/derived state - ex. filteredplayers.sort()] => can cause bugs */}
+                    <PlayerTable
+                        players={
+                            sortBy === "Goals" ? [...filteredPlayers].sort((a,b) => (b.goals - a.goals))
+                            : sortBy === "Assists" ? [...filteredPlayers].sort((a,b) => (b.assists - a.assists))
+                            : filteredPlayers
+                        }
+                        onSelectPlayer={setSelectedPlayer}
+                    />
+                </>
+            )}
         </section>
       </main>
   );
